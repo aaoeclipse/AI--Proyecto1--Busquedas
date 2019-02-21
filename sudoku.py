@@ -132,9 +132,6 @@ class Solver:
             # 1. Check Goal return if true, return if true
             if (self.estado.goal == True):
                 print('Goal found!')
-                self.caminosTomados[-1].printTablero()
-                for estado in self.caminosTomados:
-                    estado.printTablero()
                 return
             # 2. Sacar posibles estados
             if(self.estado.getCelda(self.pos) != '.'):
@@ -144,11 +141,14 @@ class Solver:
                 self.pos = self.pos + 1
             else:
                 posiblesEstados = self.actions(self.estado)
+                print('posibles estados {}'.format(len(posiblesEstados)))
                 # 2.1 Eliminar estados que ya fueron explorados
                 for estadoExplorado in self.caminosTomados:
                     for estadosEvaluando in posiblesEstados:
                         if (estadoExplorado.tablero == estadosEvaluando.tablero):
+                            estadosEvaluando.printTablero()
                             posiblesEstados.remove(estadosEvaluando)
+                print('posibles estados despues de remove {}'.format(len(posiblesEstados)))                
                 # 2.2 Si no hay posibles estado para tomar entonces retroceder (hay que sacar otra lista nueva para decir el camino viejo tomado)
                 if (len(posiblesEstados) == 0):
                     if (len(self.caminosTomados) > 0):
@@ -180,6 +180,13 @@ class Solver:
                     # tmpEstado.printTablero()
                     if (self.pos == 15):
                         self.estado.goal = True
+                    print('----')
+                    self.estado.printTablero()
+                    """ print('aAAAAAAAAAAAA')
+                    for asdf in self.caminosTomados:
+                        asdf.printTablero()
+                        print('------') """
+                    
         pass
     def actions(self, estado):
         global DIMENSION
@@ -190,6 +197,10 @@ class Solver:
             tmpEstado = Estado(tablaCurr)
             if (value > 0):
                 tmpEstado.tablero[self.pos] = key
+                print("*******")
+                tmpEstado.printTablero()
+                print("*******")
+                # print(tmpEstado.heuristica())
                 if (tmpEstado.heuristica() >= 0):
                     nuevosEstados.append(tmpEstado)
         return nuevosEstados
